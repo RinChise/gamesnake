@@ -4,7 +4,7 @@ Einfaches Snake Game.
 
 ## Funktionen
 - Hauptmenü
-- Highscore über Datenbank speichern
+- Highscore anzeigen
 
 
 ## Installation
@@ -22,4 +22,3 @@ Einfaches Snake Game.
 
 ## Voraussetzungen
 - Python 3.12
-- MySQL-Server
