@@ -1,7 +1,8 @@
 import pygame
 import sys
 from typing import Optional, List, Tuple
-from logic import GameLogic
+from logic import BaseLogic
+from singleplayer import SingleplayerLogic
 from db_score import DBScore
 
 # Konstanten für Fenstergröße und Farben
@@ -167,7 +168,7 @@ def main() -> None:
     while True:
         selection = show_menu(game_window, fps_controller, db)
         if selection == "singleplayer":
-            game = GameLogic(game_window, fps_controller, WINDOW_WIDTH, WINDOW_HEIGHT)
+            game = SingleplayerLogic(game_window, fps_controller, WINDOW_WIDTH, WINDOW_HEIGHT)
 
             while True:
                 game.process_events()
