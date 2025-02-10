@@ -12,9 +12,11 @@ Einfaches Snake Game.
 
     git clone https://github.com/RinChise/gamesnake.git
 
+
 2. Installiere die Abhängigkeiten:
     
     pip install -r requirements.txt
+
 
 3. Starte die Anwendung:
 

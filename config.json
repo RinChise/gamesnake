@@ -1,7 +1,8 @@
 {
   "DB_NAME": "neondb",
-  "DB_USER": "neondb_owner",
-  "DB_PASSWORD": "npg_DVL82EspGzXg",
+  "DB_USER": "testuser",
+  "DB_PASSWORD": "npg_FAgDrXGS0h9k",
   "DB_HOST": "ep-purple-dawn-a24tynl9-pooler.eu-central-1.aws.neon.tech",
-  "DB_PORT": "5432"
+  "DB_PORT": "5432",
+  "DB_SSLMODE": "require"
   }
