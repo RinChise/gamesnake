@@ -1,8 +1,9 @@
 import pygame
 import sys
 from typing import Optional, List, Tuple
-from logic import BaseLogic
+from logic import BaseLogic, COLORS
 from singleplayer import SingleplayerLogic
+from multiplayer import MultiplayerLogic
 from db_score import DBScore
 
 # Konstanten für Fenstergröße und Farben
@@ -11,12 +12,7 @@ BORDER_HEIGHT = 50
 GAME_HEIGHT = 800
 WINDOW_HEIGHT = GAME_HEIGHT + BORDER_HEIGHT
 
-COLORS = {
-    "BLACK": (0, 0, 0),
-    "WHITE": (255, 255, 255),
-    "LIGHT_SKY_BLUE": (135, 206, 250),
-    "DODGER_BLUE": (30, 144, 255),
-}
+COLORS = COLORS
 
 FONT_NAME = "arial"
 FONT_SIZE_TITLE = 50
@@ -188,9 +184,27 @@ def main() -> None:
                 pygame.display.flip()
                 fps_controller.tick(30)
 
-        if selection == "multiplayer":
-            pass
+        elif selection == "multiplayer":
+            game = MultiplayerLogic(game_window, fps_controller, WINDOW_WIDTH, WINDOW_HEIGHT)
 
+            while True:
+                game.process_events()
+                game.update_direction()
+                game.update_snake_position()
+                game.update_snake_body()  # Update snake body before checking for collisions
+
+                if game.check_collisions() or game.game_over_flag:  # Check collisions and game over flag
+                    final_score = game.game_over()
+
+                    if final_score > 0:
+                        player_name = get_player_name(game_window, fps_controller, WINDOW_WIDTH)
+                        db.insert_score(player_name, final_score)
+
+                    break
+                game.update_snake_body()
+                game.draw_elements()
+                pygame.display.flip()
+                fps_controller.tick(30)
 
 if __name__ == '__main__':
     main()

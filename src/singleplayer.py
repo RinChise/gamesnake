@@ -10,6 +10,7 @@ class SingleplayerLogic(BaseLogic):
         Initializes single-player game logic.
         """
         super().__init__(game_window, fps_controller, window_width, window_height)
+        self.food_pos = None
         self.game_over_flag = False
         center_x = (window_width // 2 // self.block_size) * self.block_size
         center_y = ((self.playable_height // 2) // self.block_size) * self.block_size + self.border_height
@@ -19,10 +20,10 @@ class SingleplayerLogic(BaseLogic):
             [center_x - self.block_size, center_y],
             [center_x - 2 * self.block_size, center_y]
         ]
-        self.food_pos = self.spawn_food(self.snake_body)
-        self.food_spawn = True
+        self.food_pos = self.spawn_food([self.snake_body])
         self.direction = "RIGHT"
         self.change_to = self.direction
+        self.spawn_food(self.snake_body)
 
     def process_events(self) -> None:
         """
@@ -81,13 +82,10 @@ class SingleplayerLogic(BaseLogic):
         self.snake_body.insert(0, list(self.snake_pos))
         if self.snake_pos == self.food_pos:
             self.score += 1
-            self.food_spawn = False
+            self.food_pos = None
+            self.spawn_food([self.snake_body])
         else:
             self.snake_body.pop()
-
-        if not self.food_spawn:
-            self.food_pos = self.spawn_food(self.snake_body)
-            self.food_spawn = True
 
     def check_collisions(self) -> bool:
         """
@@ -108,11 +106,11 @@ class SingleplayerLogic(BaseLogic):
         """
         Draws the game elements: snake and food.
         """
-        if colors is None or len(colors) < 5:
-            colors = (COLORS["BLACK"], COLORS["RED"], COLORS["MAGENTA"], COLORS["BLUE"], COLORS["WHITE"])
-        black, red, magenta, blue, white = colors
+        super().draw_elements(colors)  # Draw background, border, and score
 
-        self.game_window.fill(black, (0, self.border_height, self.window_width, self.playable_height))
+        if colors is None:
+            colors = self.DEFAULT_COLORS
+            black, red, magenta, blue, white = colors
 
         # Draw the snake
         for pos in self.snake_body:
@@ -120,8 +118,5 @@ class SingleplayerLogic(BaseLogic):
 
         # Draw the food
         pygame.draw.rect(self.game_window, magenta, pygame.Rect(self.food_pos[0], self.food_pos[1], self.block_size, self.block_size))
-
-        # Draw the border and score
-        self.draw_border_and_score()
 
         pygame.display.update()
