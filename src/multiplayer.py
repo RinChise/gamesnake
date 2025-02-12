@@ -2,15 +2,17 @@ import random
 import pygame
 import sys
 from typing import Optional, Tuple, List
-from src.logic import BaseLogic, COLORS, FONT_NAME, FONT_SIZE_SCORE  # Assuming COLORS is defined here or in logic.py
+from src.logic import BaseLogic, COLORS, FONT_NAME, FONT_SIZE_SCORE
 
 
 class MultiplayerLogic(BaseLogic):
-    def __init__(self, game_window: pygame.Surface, fps_controller: pygame.time.Clock, window_width: int, window_height: int):
+    def __init__(self, game_window: pygame.Surface, fps_controller: pygame.time.Clock, window_width: int, window_height: int, player1_name: str, player2_name: str):
         """Initializes multiplayer game logic with two players."""
         super().__init__(game_window, fps_controller, window_width, window_height)
         self.food_pos = [None, None]  # Initialize food position
         self.game_over_flag = False
+        self.player1_name = player1_name
+        self.player2_name = player2_name
 
         # Initialize player 1 (arrow keys)
         center_x = (window_width // 2 // self.block_size) * self.block_size
@@ -30,7 +32,6 @@ class MultiplayerLogic(BaseLogic):
         self.score2 = 0
 
         self.spawn_food([self.snake1_body, self.snake2_body])  # Spawn initial food
-
 
     def process_events(self) -> None:
         """Handles keyboard events for both players."""
@@ -152,7 +153,6 @@ class MultiplayerLogic(BaseLogic):
             else:
                 self.snake2_body.pop()
 
-
     def check_collisions(self) -> None:
         """Checks for collisions, handles wrapping, and snake removal."""
         # Player 1 collisions and wrapping
@@ -208,8 +208,6 @@ class MultiplayerLogic(BaseLogic):
         # Check if the game is over (both snakes are gone)
         if not self.snake1_body and not self.snake2_body:
             self.game_over_flag = True
-
-
 
     def draw_elements(self, colors: Optional[Tuple[Tuple[int, int, int], ...]] = None) -> None:
         """Draws the game elements: two snakes and food."""

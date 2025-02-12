@@ -6,12 +6,11 @@ from singleplayer import SingleplayerLogic
 from multiplayer import MultiplayerLogic
 from db_score import DBScore
 
-# Konstanten für Fenstergröße und Farben
+# Constants (Consider moving these to a separate constants.py file)
 WINDOW_WIDTH = 800
 BORDER_HEIGHT = 50
 GAME_HEIGHT = 800
 WINDOW_HEIGHT = GAME_HEIGHT + BORDER_HEIGHT
-
 COLORS = COLORS
 
 FONT_NAME = "arial"
@@ -20,7 +19,8 @@ FONT_SIZE_OPTION = 30
 FONT_SIZE_INPUT = 30
 
 
-def get_player_name(game_window: pygame.Surface, fps_controller: pygame.time.Clock, window_width: int) -> str:
+def get_player_name(game_window: pygame.Surface, fps_controller: pygame.time.Clock, window_width: int,
+                    player_num: Optional[int] = None) -> str:
     """
     Zeigt ein Eingabefeld zur Namenseingabe an und gibt den eingegebenen Namen zurück.
 
@@ -66,13 +66,24 @@ def get_player_name(game_window: pygame.Surface, fps_controller: pygame.time.Clo
         game_window.blit(txt_surface, (input_box.x + 5, input_box.y + 5))
         pygame.draw.rect(game_window, color, input_box, 2)
 
-        instruction = font.render("Gib deinen Namen ein:", True, COLORS["WHITE"])
+        if player_num:
+            instruction = font.render(f"Player {player_num}, Name:", True, COLORS["WHITE"])
+        else:
+            instruction = font.render("Name eingeben:", True, COLORS["WHITE"])
         game_window.blit(instruction, (window_width // 2 - instruction.get_width() // 2, input_box.y - 40))
 
         pygame.display.flip()
         fps_controller.tick(30)
 
-    return text.strip()  # Entfernt ungewollte Leerzeichen
+    return text.strip()
+
+
+def get_two_player_names(game_window: pygame.Surface, fps_controller: pygame.time.Clock, window_width: int) -> Tuple[
+    str, str]:
+    """Gets names for two players."""
+    player1_name = get_player_name(game_window, fps_controller, window_width, 1)  # Correct call with player_num
+    player2_name = get_player_name(game_window, fps_controller, window_width, 2)  # Correct call with player_num
+    return player1_name, player2_name
 
 
 def show_highscore(game_window: pygame.Surface, fps_controller: pygame.time.Clock, db: DBScore) -> None:
@@ -137,17 +148,19 @@ def show_menu(game_window: pygame.Surface, fps_controller: pygame.time.Clock, db
         pygame.display.flip()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
+                return "quit"
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_1:
                     return "singleplayer"
                 elif event.key == pygame.K_2:
-                    return "multiplayer"
+                    player1_name, player2_name = get_two_player_names(game_window, fps_controller, WINDOW_WIDTH)
+                    return "multiplayer", player1_name, player2_name
                 elif event.key == pygame.K_3:
-                    show_highscore(game_window, fps_controller, db)
+                    result = show_highscore(game_window, fps_controller, db)  # Capture the result
+                    if result == "quit":  # Check if quit from highscore screen
+                        return "quit"
                 elif event.key == pygame.K_4:
-                    sys.exit()
+                    return "quit"
         fps_controller.tick(30)
 
 
@@ -163,48 +176,60 @@ def main() -> None:
 
     while True:
         selection = show_menu(game_window, fps_controller, db)
-        if selection == "singleplayer":
+
+        if selection == "quit":
+            break
+
+        if isinstance(selection, tuple):
+            mode, player1_name, player2_name = selection
+            if mode == "multiplayer":
+                game = MultiplayerLogic(game_window, fps_controller, WINDOW_WIDTH, WINDOW_HEIGHT, player1_name, player2_name)
+            else:  # Should not happen, but good to have a default case
+                continue  # Go back to menu
+
+        elif selection == "singleplayer":
             game = SingleplayerLogic(game_window, fps_controller, WINDOW_WIDTH, WINDOW_HEIGHT)
+        else:
+            continue  # Go back to menu
 
-            while True:
+        # Now, outside the if/elif chain, start the game loop
+        while True:
+            if isinstance(game, MultiplayerLogic):
                 game.process_events()
                 game.update_direction()
                 game.update_snake_position()
+                game.update_snake_body()
 
-                if game.game_over_flag or game.check_collisions():
+                if game.check_collisions() or game.game_over_flag:
                     final_score = game.game_over()
 
                     if final_score > 0:
                         player_name = get_player_name(game_window, fps_controller, WINDOW_WIDTH)
                         db.insert_score(player_name, final_score)
 
-                    break
-                game.update_snake_body()
-                game.draw_elements()
+                    break  # Exit the inner game loop
+                game.draw_elements() #moved draw_elements and flip here
                 pygame.display.flip()
                 fps_controller.tick(30)
 
-        elif selection == "multiplayer":
-            game = MultiplayerLogic(game_window, fps_controller, WINDOW_WIDTH, WINDOW_HEIGHT)
-
-            while True:
+            elif isinstance(game, SingleplayerLogic):
                 game.process_events()
                 game.update_direction()
                 game.update_snake_position()
-                game.update_snake_body()  # Update snake body before checking for collisions
+                game.update_snake_body()
 
-                if game.check_collisions() or game.game_over_flag:  # Check collisions and game over flag
+                if game.check_collisions() or game.game_over_flag:
                     final_score = game.game_over()
 
                     if final_score > 0:
                         player_name = get_player_name(game_window, fps_controller, WINDOW_WIDTH)
                         db.insert_score(player_name, final_score)
 
-                    break
-                game.update_snake_body()
-                game.draw_elements()
+                    break # Exit the inner game loop
+                game.draw_elements() #moved draw_elements and flip here
                 pygame.display.flip()
                 fps_controller.tick(30)
+
 
 if __name__ == '__main__':
     main()

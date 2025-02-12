@@ -12,6 +12,8 @@ COLORS = {
     "BLUE": (0, 255, 255),
     "WHITE": (255, 255, 255),
     "GRAY": (50, 50, 50),
+    "LIGHT_SKY_BLUE": (135, 206, 250),
+    "DODGER_BLUE": (30, 144, 255),
 }
 
 FONT_NAME = "arial"
