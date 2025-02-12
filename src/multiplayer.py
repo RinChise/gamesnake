@@ -239,39 +239,46 @@ class MultiplayerLogic(BaseLogic):
 
     def draw_border_and_score(self) -> None:
         """Draws the score border and displays the current scores (modified for multiplayer)."""
-        super().draw_border_and_score()  # Call the base class version to draw border and P1 score
 
+        pygame.draw.rect(self.game_window, COLORS["GRAY"], (0, 0, self.window_width, self.border_height))
         font = pygame.font.SysFont(FONT_NAME, FONT_SIZE_SCORE)
 
+        # Player 1 score with name
+        score1_surface = font.render(f"{self.player1_name}: {self.score}", True, COLORS["WHITE"])
+        self.game_window.blit(score1_surface, (10, 10))
+
         # Player 2 score (top right)
-        score2_surface = font.render(f"P2: {self.score2}", True, COLORS["WHITE"])
+        score2_surface = font.render(f"{self.player2_name}: {self.score2}", True, COLORS["WHITE"])
         score2_rect = score2_surface.get_rect()
         score2_rect.topright = (self.window_width - 10, 10)  # Position at top right
         self.game_window.blit(score2_surface, score2_rect)
 
     def game_over(self) -> int:
-        """Handles game over logic, including displaying the winner screen (extended for multiplayer)."""
-        highest_score = super().game_over()  # Call the base class game_over to handle common game over logic
-
-        font = pygame.font.SysFont(FONT_NAME, FONT_SIZE_SCORE * 2)  # Larger font for winner message
+        """Handles game over logic for multiplayer, displaying winner or tie."""
+        font = pygame.font.SysFont(FONT_NAME, FONT_SIZE_SCORE * 2)
 
         if hasattr(self, 'winner') and self.winner:  # Check if a winner was determined
-            winner_text = font.render(f"Winner: Player {self.winner}", True, COLORS["WHITE"])
-        else:
-            winner_text = font.render("Game Over! (Tie)", True, COLORS["WHITE"])  # Handle ties
+            if self.winner == 1:
+                winner_name = self.player1_name
+            elif self.winner == 2:
+                winner_name = self.player2_name
+            else:
+                winner_name = "Someone"  # Handle unexpected winner values
+
+            winner_text = font.render(f"Winner: {winner_name}", True, COLORS["WHITE"])
+        else:  # No winner (tie)
+            winner_text = font.render("Game Over! (Tie)", True, COLORS["WHITE"])
 
         winner_rect = winner_text.get_rect(center=(self.window_width // 2, self.window_height // 2))
+        self.game_window.fill(COLORS["BLACK"])  # Clear the screen
         self.game_window.blit(winner_text, winner_rect)
+        self.draw_border_and_score()  # Redraw the score
+        pygame.display.flip()
 
-        pygame.display.flip()  # Update the display
-
-        # Wait for a key press to exit the game over screen
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
-                elif event.type == pygame.KEYDOWN:  # Any key press exits the game over screen
-                    return 0  # Return 0 so it does not insert a score
-
-        return highest_score  # Return the highest score for high score table
+                elif event.type == pygame.KEYDOWN:
+                    return 0  # Return 0 to prevent score insertion

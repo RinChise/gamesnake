@@ -201,12 +201,7 @@ def main() -> None:
                 game.update_snake_body()
 
                 if game.check_collisions() or game.game_over_flag:
-                    final_score = game.game_over()
-
-                    if final_score > 0:
-                        player_name = get_player_name(game_window, fps_controller, WINDOW_WIDTH)
-                        db.insert_score(player_name, final_score)
-
+                    game.game_over()
                     break  # Exit the inner game loop
                 game.draw_elements() #moved draw_elements and flip here
                 pygame.display.flip()
