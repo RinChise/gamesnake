@@ -18,7 +18,6 @@ FONT_SIZE_TITLE = 50
 FONT_SIZE_OPTION = 30
 FONT_SIZE_INPUT = 30
 
-
 def get_player_name(game_window: pygame.Surface, fps_controller: pygame.time.Clock, window_width: int,
                     player_num: Optional[int] = None) -> str:
     """
@@ -165,9 +164,6 @@ def show_menu(game_window: pygame.Surface, fps_controller: pygame.time.Clock, db
 
 
 def main() -> None:
-    """
-    Hauptfunktion des Spiels. Initialisiert Pygame und startet das Spiel.
-    """
     pygame.init()
     game_window = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
     pygame.display.set_caption("Snake Game")
@@ -184,26 +180,26 @@ def main() -> None:
             mode, player1_name, player2_name = selection
             if mode == "multiplayer":
                 game = MultiplayerLogic(game_window, fps_controller, WINDOW_WIDTH, WINDOW_HEIGHT, player1_name, player2_name)
-            else:  # Should not happen, but good to have a default case
-                continue  # Go back to menu
+            else:
+                continue
 
         elif selection == "singleplayer":
             game = SingleplayerLogic(game_window, fps_controller, WINDOW_WIDTH, WINDOW_HEIGHT)
         else:
-            continue  # Go back to menu
+            continue
 
-        # Now, outside the if/elif chain, start the game loop
         while True:
             if isinstance(game, MultiplayerLogic):
                 game.process_events()
                 game.update_direction()
                 game.update_snake_position()
                 game.update_snake_body()
+                game.check_collisions()  # No longer returns a value
 
-                if game.check_collisions() or game.game_over_flag:
-                    game.game_over()
-                    break  # Exit the inner game loop
-                game.draw_elements() #moved draw_elements and flip here
+                if game.game_over_flag:
+                    game.game_over()  # Multiplayer game_over handles its logic
+                    break
+                game.draw_elements()
                 pygame.display.flip()
                 fps_controller.tick(30)
 
@@ -215,13 +211,11 @@ def main() -> None:
 
                 if game.check_collisions() or game.game_over_flag:
                     final_score = game.game_over()
-
                     if final_score > 0:
                         player_name = get_player_name(game_window, fps_controller, WINDOW_WIDTH)
                         db.insert_score(player_name, final_score)
-
-                    break # Exit the inner game loop
-                game.draw_elements() #moved draw_elements and flip here
+                    break
+                game.draw_elements()
                 pygame.display.flip()
                 fps_controller.tick(30)
 
