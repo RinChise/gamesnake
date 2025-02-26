@@ -7,7 +7,7 @@ Ein klassisches Snake-Spiel in Python mit **Singleplayer**, **Multiplayer** und 
 
 1. **Repository klonen:**
    ```sh
-   git clone https://github.com/RinChise/snake-game.git
+   git clone https://github.com/RinChise/gamesnake.git
    ```
 2. **Benötigte Abhängigkeiten installieren (falls erforderlich):**
    ```sh
