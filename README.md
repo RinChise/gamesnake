@@ -13,7 +13,10 @@ Ein klassisches Snake-Spiel in Python mit **Singleplayer**, **Multiplayer** und 
    ```sh
    pip install -r requirements.txt
    ```
-3. **Spiel starten:**
+3. **In der config.json: "DB_PASSWORD" Fragezeichen im Passwort entfernen**
+
+
+4. **Spiel starten:**
    ```sh
    python3 main.py
    ```
