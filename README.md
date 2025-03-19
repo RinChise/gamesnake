@@ -1,9 +1,9 @@
 
-# 🐍 Snake Game
+# Snake Game
 
 Ein klassisches Snake-Spiel in Python mit **Singleplayer**, **Multiplayer** und **Highscore-Funktion**.  
 
-## 🚀 Installation
+## Installation
 
 1. **Repository klonen:**
    ```sh
@@ -18,16 +18,16 @@ Ein klassisches Snake-Spiel in Python mit **Singleplayer**, **Multiplayer** und 
    python3 main.py
    ```
 
-## 🎮 Spielmodi
+## Spielmodi
 
-### 🏆 **Hauptmenü**
+### **Hauptmenü**
 Wähle zwischen **Singleplayer**, **Multiplayer** oder **Highscore**.
 
-### 🐍 **Singleplayer**
+### **Singleplayer**
 - Du steuerst eine Schlange und musst wachsen, ohne den **Rand oder deinen eigenen Schwanz** zu berühren.  
 - Sobald du dich selbst oder den Rand berührst, **verlierst du**.  
 
-### 👫 **Multiplayer (Lokal)**
+### **Multiplayer (Lokal)**
 - Zwei Spieler teilen sich **eine Tastatur** und steuern ihre Schlangen.
 - Der Rand ist **"wrapped"**, das heißt, du spawnst auf der gegenüberliegenden Seite, wenn du rausgehst.
 - Eine **stärkere Schlange kann eine schwächere fressen**.
@@ -35,18 +35,18 @@ Wähle zwischen **Singleplayer**, **Multiplayer** oder **Highscore**.
   - in deinen eigenen Schwanz läufst,
   - in eine **stärkere** Schlange kollidierst.
 
-### 📈 **Highscore**
+### **Highscore**
 - Die **Top 10 Spieler-Scores** werden aus der **Datenbank** abgerufen und angezeigt.
 - Punkte werden basierend auf der Spiellänge und gefressenem Essen berechnet.
 
-## 🎮 Steuerung
+## Steuerung
 
 | Spieler | Steuerung   |
 |---------|-------------|
 | **Spieler 1** | Pfeiltasten |
 | **Spieler 2** | W, S, A, D  |
 
-## 📊 Highscore-System
+## Highscore-System
 
 - Highscores werden in einer **Datenbank gespeichert**.
 - Nur die **Top 10 Spieler** werden im Highscore-Bildschirm angezeigt.
