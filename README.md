@@ -23,9 +23,15 @@ Ein klassisches Snake-Spiel in Python mit **Singleplayer**, **Multiplayer** und 
 ### **Hauptmenü**
 Wähle zwischen **Singleplayer**, **Multiplayer** oder **Highscore**.
 
+![Bildschirmfoto vom 2025-03-20 08-51-27](https://github.com/user-attachments/assets/8e387557-fb27-4640-8099-4c8a501106e4)
+
+
 ### **Singleplayer**
 - Du steuerst eine Schlange und musst wachsen, ohne den **Rand oder deinen eigenen Schwanz** zu berühren.  
-- Sobald du dich selbst oder den Rand berührst, **verlierst du**.  
+- Sobald du dich selbst oder den Rand berührst, **verlierst du**.
+
+![Bildschirmfoto vom 2025-03-20 08-51-09](https://github.com/user-attachments/assets/465220ef-717b-43c9-865f-f977a621da5a)
+
 
 ### **Multiplayer (Lokal)**
 - Zwei Spieler teilen sich **eine Tastatur** und steuern ihre Schlangen.
@@ -34,10 +40,16 @@ Wähle zwischen **Singleplayer**, **Multiplayer** oder **Highscore**.
 - Du verlierst, wenn du:
   - in deinen eigenen Schwanz läufst,
   - in eine **stärkere** Schlange kollidierst.
+ 
+![Bildschirmfoto vom 2025-03-20 08-50-37](https://github.com/user-attachments/assets/dcaf030a-7d45-479e-83c5-773bb4d3296a)
+
 
 ### **Highscore**
 - Die **Top 10 Spieler-Scores** werden aus der **Datenbank** abgerufen und angezeigt.
 - Punkte werden basierend auf der Spiellänge und gefressenem Essen berechnet.
+
+![Bildschirmfoto vom 2025-03-20 08-53-09](https://github.com/user-attachments/assets/fb70f143-c135-4c96-81aa-faf798de56fd)
+
 
 ## Steuerung
 
